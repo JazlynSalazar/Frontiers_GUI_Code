@@ -33,16 +33,16 @@ ui <- page_sidebar(
     
     textInput(
       inputId = "filename",
-      label = "Enter file name (no extension needed, will be .trt). Naughty characters will be replaced with an underscore:",
+      label = "Enter file name (no extension needed, will be .csv). Naughty characters will be replaced with an underscore:",
       ##We need to ask the user for the file name here because we have to 
-      ##save it as a .trt file, which Windows will not give the optino for and
+      ##save it as a .csv file, which Windows will not give the optino for and
       ##the user may not know they need to do
       placeholder = "i haven't watched enough Ru Paul to make a joke here :("
     ),
     
     downloadButton(
       outputId = "download_text",
-      label = "Download Fieldbook Trait (.trt) file"
+      label = "Download Fieldbook Trait (.csv) file"
     )
   )
 )
@@ -68,16 +68,16 @@ server <- function(input,output) {
         ##systime so people can differentiate their empty file names and they
         ##dont overwrite old empty file names
       }
-      paste0(name, ".trt") ##concat everything in ()
+      paste0(name, ".csv") ##concat everything in ()
       ##paste0() makes sure there's no spaces, paste() would replace commas
       ##with spaces
     },
     contentType = "text/plain",
     content = function(file) {
       header <- c('"trait","format","defaultValue","minimum","maximum","details","categories","isVisible","realPosition"')
-      ##header line for our .trt file
+      ##header line for our .csv file
       writeLines(header, file) ##writes header line to .txt file
-      ##here is where the rest of the .trt stuff will go.  The extra lines with 
+      ##here is where the rest of the .csv stuff will go.  The extra lines with 
       ##each trait 
     }
   )
