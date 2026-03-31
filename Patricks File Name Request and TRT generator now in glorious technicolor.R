@@ -74,8 +74,9 @@ server <- function(input,output) {
     },
     contentType = "text/plain",
     content = function(file) {
-      header <- ('"trait","format","defaultValue","minimum","maximum","details","categories","isVisible","realPosition"')
+      header <- c('"trait","format","defaultValue","minimum","maximum","details","categories","isVisible","realPosition"')
       ##header line for our .csv file
+      ##to add another row in your .csv, simply add a comma and a carraige return after the last "'
       writeLines(header, file) ##writes header line to .txt file
       ##here is where the rest of the .csv stuff will go.  The extra lines with 
       ##each trait 
