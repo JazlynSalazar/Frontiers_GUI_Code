@@ -42,7 +42,7 @@ ui <- page_sidebar(
     
     downloadButton(
       outputId = "download_text",
-      label = "Download Fieldbook Trait (.csv) file"
+      label = "Download .csv file"
     )
   )
 )
