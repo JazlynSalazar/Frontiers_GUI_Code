@@ -1,0 +1,111 @@
+---
+title: "Field Book Trait Reference Guide"
+author: "Jazlyn Salazar"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+packages <- c("readxl", "dplyr", "knitr", "kableExtra")
+
+installed <- packages %in% rownames(installed.packages())
+if (any(!installed)) {
+  install.packages(packages[!installed])
+}
+
+library(readxl)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+# Overview
+
+This document provides a standardized reference for trait data collected using the Field Book application. It is intended to serve as supplemental documentation to support consistent data collection, trait interpretation, and downstream analysis.
+
+This guide is designed to provide a centralized and accessible source for trait names, trait types, and trait definitions so that users can apply consistent terminology across projects.
+
+# Purpose
+
+The purpose of this reference guide is to:
+
+- establish consistent terminology for all recorded traits
+- provide a centralized reference for trait categories, names, and definitions
+- support uniform data collection across users
+- provide a low-barrier to entry for using Field Book and GRIN
+- provide supplemental documentation for future reference and project use
+- serve as a resource for GUI development
+
+# Dataset Structure
+
+Each entry in the dataset is defined by the following components:
+
+- **Trait Category**: a broad classification grouping traits by biological or experimental context
+- **Trait Name**: the descriptor used within Field Book to record observations
+- **Trait Type**: the data format used for recording values
+- **Definition**: a brief explanation of what the trait represents and how it should be interpreted
+
+# Data Source
+
+The data presented in this document are imported directly from the trait categories and names excel file and processed in R. Re-knitting this document after updates to this file will (should) automatically refresh the reference table and maintain an up-to-date record of trait metadata.
+
+```{r import-data}
+# import data
+traits <- read_excel("trait categories and names.xlsx")
+```
+
+```{r clean-data}
+# clean and prepare data
+traits_clean <- traits %>%
+  rename(
+    Trait_Category = Category,
+    Trait_Name = Descriptor,
+    Trait_Type = `Field Book Trait Type`
+  )
+
+if (!"Definition" %in% names(traits_clean)) {
+  traits_clean <- traits_clean %>%
+    mutate(Definition = "Definition not yet provided")
+}
+
+traits_clean <- traits_clean %>%
+  mutate(
+    Trait_Type = ifelse(is.na(Trait_Type) | Trait_Type == "", "Not Specified", Trait_Type),
+    Definition = ifelse(is.na(Definition) | Definition == "", "Definition not yet provided", Definition)
+  ) %>%
+  arrange(Trait_Category, Trait_Name)
+```
+
+# Trait Reference Table
+
+The table below provides a reference list of Field Book traits, including trait category, trait name, data type, and trait definition.
+
+```{r trait-table}
+traits_clean %>%
+  select(Trait_Category, Trait_Name, Trait_Type, Definition) %>%
+  kable(
+    format = "html",
+    caption = "Field Book Trait Reference Table",
+    col.names = c("Trait Category", "Trait Name", "Trait Type", "Definition"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE
+  )
+```
+
+# Notes
+
+This document is intended to function as a supplemental reference for Field Book trait documentation. It will be updated as the Field Book GUI, trait dictionary, and supporting metadata continue to be refined.
+ 
