@@ -1,8 +1,8 @@
 #Tom's .trt file creator (WIP)
 #Use trait.list for the input responses (traits to include checklist)
 trait.list<-c("Endosperm Color", "Oil Percentage", "Plant Height", "Notes and Remarks")
-trait_file<-data.frame("trait"=trait.list,"format"=NA,"defaultValue"=NA,"minimum"=NA,"maximum"=NA,
-                       "details"=NA,"categories"=NA,"isVisible"=TRUE,"realPosition"=seq(from=1, to=length(trait.list), by=1))
+trait_file<-data.frame("trait"=trait.list,"format"="","defaultValue"="","minimum"="","maximum"="",
+                       "details"="","categories"="","isVisible"=TRUE,"realPosition"=seq(from=1, to=length(trait.list), by=1))
 
 category1<-c("White/Yellow/Purple/Green/Blue/Red/Pink/Orange/None")
 descriptor1<-c("Color")
@@ -110,11 +110,6 @@ for (i in 1:nrow(trait_file)){
   }  
   else trait_file[i,2]<-"numeric"}
 
-write.csv(trait_file, "traitcsv.csv")
-traitcsv<-read.csv("") #Might need to setwd or something, unless the .csv can be created 
-                       #in the "server" somehow (temporarily?) 
-write.table<-write.table(trtcsv, sep=",", quote=T, file="traits.trt", row.names=F, col.names=F)
-#OR I may be dumb and we can just write a table using the dataframe???
-#Give this a try:
-write.table<-write.table(trait_file, sep=",", quote=T, file="traits.trt", row.names=F, col.names=F)
+#Creating .trt file
+write.table<-write.table(trait_file, sep=",", quote=T, file="traits.trt", row.names=F, col.names=T)
 
