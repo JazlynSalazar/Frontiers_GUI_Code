@@ -1,0 +1,106 @@
+---
+title: "Field Book Trait Reference Guide"
+author: "Tuesday Crewsday"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+packages <- c("readxl", "dplyr", "knitr", "kableExtra")
+
+installed <- packages %in% rownames(installed.packages())
+if (any(!installed)) {
+  install.packages(packages[!installed])
+}
+
+library(readxl)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+# Overview
+
+This document provides a standardized reference for trait data collected using the Field Book application. It is intended to serve as supplemental documentation to support consistent data collection, trait interpretation, and downstream analysis.
+
+This guide is designed to provide a centralized and accessible source for trait names, trait types, and trait definitions so that users can apply consistent terminology across projects.
+
+The Shiny application was developed to support phenomic data handling and Field Book trait file generation through a graphical user interface (GUI). This application allows users to upload phenomic datasets and generate downloadable trait files formatted for use with Field Book.
+
+# Purpose
+
+The purpose of this reference guide is to:
+
+- establish consistent terminology for all recorded traits
+- provide a centralized reference for trait categories, names, and definitions
+- support uniform data collection across users
+- provide a low-barrier entry point for using Field Book and GRIN
+- provide supplemental documentation for future reference and project use
+- serve as a resource for GUI development
+
+# Dataset Structure
+
+Each entry in the dataset is defined by the following components:
+
+- **Trait**: the trait name used for documentation and reference
+- **Trait Description**: a written definition or explanation of the trait
+- **Trait Category**: a grouping used to organize traits by type or application
+- **Data Type**: the expected format of the recorded data
+
+# Data Source
+
+The data presented in this document are imported directly from the `maize_traits.xlsx` file and processed in R. Re-knitting this document after updates to this file will automatically refresh the reference table and maintain an up-to-date record of trait metadata.
+
+```{r import-data}
+# import data
+maize_traits <- read_excel("maize_traits.xlsx")
+```
+
+```{r clean-data}
+# clean up data
+traits_clean <- maize_traits %>%
+  rename(
+    category = Catergory,
+    data_type = `data type`
+  ) %>%
+  mutate(
+    title = ifelse(is.na(title) | title == "", "Not Provided", title),
+    description = ifelse(is.na(description) | description == "", "Definition not yet provided", description),
+    category = ifelse(is.na(category) | category == "", "Not Specified", category),
+    data_type = ifelse(is.na(data_type) | data_type == "", "Not Specified", data_type)
+  ) %>%
+  arrange(category, title)
+```
+
+# Trait Reference Table
+
+The table below provides a reference list of Field Book traits for maize, including the trait, trait description, trait category, and data type.
+
+```{r trait-table}
+traits_clean %>%
+  select(title, description, category, data_type) %>%
+  kable(
+    format = "html",
+    caption = "Field Book Trait Reference Table",
+    col.names = c("Trait", "Trait Description", "Trait Category", "Data Type"),
+    escape = FALSE
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    full_width = FALSE
+  )
+```
+
+# Notes
+
+This document is intended to function as a supplemental reference for Field Book trait documentation. It will be updated as the Field Book GUI, trait dictionary, and supporting metadata continue to be refined.
