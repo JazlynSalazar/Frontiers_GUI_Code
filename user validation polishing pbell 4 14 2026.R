@@ -13,6 +13,9 @@
 if(!require("bsicons")) install.packages("bsicons")
 ##this code will check if a package is installed and only install it if it's 
 ##not there
+##require("packagename") returns TRUE if installed, but !require makes it FALSE
+##if installed, so if !require returns TRUE, it means the package is not present 
+## and installs the package
 if(!require("shinyWidgets")) install.packages("shinyWidgets")
 if(!require("shiny")) install.packages("shiny")
 if(!require("bslib")) install.packages("bslib")
